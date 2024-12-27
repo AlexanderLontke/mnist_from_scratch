@@ -1,3 +1,4 @@
+#include <math.h>
 #include "matrix.hpp"
 #include "activation.hpp"
 

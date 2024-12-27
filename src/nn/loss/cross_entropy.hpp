@@ -1,18 +1,26 @@
-#include "layer.hpp"
+#include "math.h"
+#include "matrix.hpp"
+#include "loss.hpp"
 
-class CrossEntropyLoss: public Layer{
+class CrossEntropyLoss: public Loss{
 public:
     CrossEntropyLoss();
-    float forward(Matrix y_hat, Matrix y);
+    float calculate_loss(Matrix predicted, Matrix expected);
+    Matrix calculate_derivative(Matrix predicted, Matrix expected);
 };
 
 CrossEntropyLoss::CrossEntropyLoss(){}
 
-float CrossEntropyLoss::forward(Matrix y_hat, Matrix y){
-    Matrix result = Matrix(y.rows(), y.cols());
-    for(int i=0; i<y.rows(); i++){
-        for(int j=0; j<y.cols(); j++){
-            result.set(i, j, y.get(i, j)*log(y_hat.get(i, j)));
+float CrossEntropyLoss::calculate_loss(Matrix predicted, Matrix expected){
+    assert(predicted.rows() == expected.rows());
+    assert(predicted.cols() == expected.cols());
+
+    // Calculate the loss for each element in the matrix
+    // using the formula -y*log(y_hat) and sum the results
+    Matrix result = Matrix(expected.rows(), expected.cols());
+    for(int i=0; i<predicted.rows(); i++){
+        for(int j=0; j<predicted.cols(); j++){
+            result.set(i, j, expected.get(i, j)*log(predicted.get(i, j)));
         }
     }
     return -1.0 * result.sum();

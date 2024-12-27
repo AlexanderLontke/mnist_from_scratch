@@ -1,4 +1,6 @@
-#include <matrix.hpp>
+#include "matrix.hpp"
+#include "trainer.hpp"
+
 
 // main function
 int main() {
@@ -9,5 +11,6 @@ int main() {
     Eye e(2, 2);
     e.print();
 
+    // FeedForwardNeuralNetwork nn(32, 128, 10, "relu");
     return 0;
 }
