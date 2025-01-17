@@ -9,18 +9,22 @@ public:
     Layer();
     ~Layer();
     Matrix forward(Matrix input);
-    virtual void update_weights(Matrix update_gradients) = 0;
-
-private:
-    virtual Matrix _handle_forward(Matrix input) = 0;
+    Matrix get_outputs() { return this->_outputs; };
+    Matrix get_delta() { return this->_delta; };
+    
+    // Hold delta values for backpropagation
+    Matrix _delta;
+protected:
+    // Cache outputs for backpropagation
     Matrix _outputs;
-    Matrix _update_gradients;
+    virtual Matrix _handle_forward(Matrix input) = 0;
 };
+
 
 Layer::Layer()
 {
     this->_outputs = Matrix(0, 0);
-    this->_update_gradients = Matrix(0, 0);
+    this->_delta = Matrix(0, 0);
 }
 
 Layer::~Layer()
