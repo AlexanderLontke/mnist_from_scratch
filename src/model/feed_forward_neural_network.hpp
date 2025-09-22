@@ -14,9 +14,9 @@ class FeedForwardNeuralNetwork : public Model
 {
 public:
     FeedForwardNeuralNetwork(int input_size, int hidden_size, int output_size, float learning_rate);
-    Matrix forward(Matrix input);
-    void backpropagation(Matrix expected_output, Loss& loss);
-    void update_weights(float learning_rate);
+    Matrix forward(Matrix input) override;
+    void backpropagation(Matrix expected_output, Loss& loss) override;
+    void update_weights(float learning_rate) override;
     // Define layers
     Linear* linear_1;
     ReLu* relu;
@@ -25,7 +25,7 @@ public:
     float _learning_rate;
 };
 
-FeedForwardNeuralNetwork::FeedForwardNeuralNetwork(int input_size, int hidden_size, int output_size, float learning_rate)
+inline FeedForwardNeuralNetwork::FeedForwardNeuralNetwork(int input_size, int hidden_size, int output_size, float learning_rate)
 {
     this->linear_1 = new Linear(input_size, hidden_size);
     this->relu = new ReLu();
@@ -34,7 +34,7 @@ FeedForwardNeuralNetwork::FeedForwardNeuralNetwork(int input_size, int hidden_si
     this->_learning_rate = 0.01;
 }
 
-Matrix FeedForwardNeuralNetwork::forward(Matrix input)
+inline Matrix FeedForwardNeuralNetwork::forward(Matrix input)
 {
     Matrix output = input;
     output = this->linear_1->forward(output);
@@ -44,7 +44,7 @@ Matrix FeedForwardNeuralNetwork::forward(Matrix input)
     return output;
 }
 
-void FeedForwardNeuralNetwork::backpropagation(Matrix expected_output, Loss& loss)
+inline void FeedForwardNeuralNetwork::backpropagation(Matrix expected_output, Loss& loss)
 {
     // Calculate loss
     Matrix predicted_output = this->softmax->get_outputs();
@@ -56,7 +56,7 @@ void FeedForwardNeuralNetwork::backpropagation(Matrix expected_output, Loss& los
     this->linear_1->_delta = this->linear_2->_delta * this->linear_2->weights.transpose() * this->relu->backward();
 }
 
-void FeedForwardNeuralNetwork::update_weights(float learning_rate)
+inline void FeedForwardNeuralNetwork::update_weights(float learning_rate)
 {
     this->linear_1->update_weights(learning_rate);
     this->linear_2->update_weights(learning_rate);

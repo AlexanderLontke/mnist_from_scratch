@@ -6,23 +6,25 @@
 #include "loss.hpp"
 #include "data_loader.hpp"
 
+template <typename T_dataloader>
 class ModelTrainer
 {
 public:
-    ModelTrainer(Model &model, Loss &loss, DataLoader& train_dataloader, DataLoader& test_dataloader, int epochs, float learning_rate);
+    ModelTrainer(Model &model, Loss &loss, DataLoader<T_dataloader>& train_dataloader, DataLoader<T_dataloader>& test_dataloader, int epochs, float learning_rate);
     void train(Matrix input, Matrix expected_output);
     void test(Matrix input, Matrix expected_output);
 
 private:
     Model &_model;
     Loss &_loss;
-    DataLoader &_train_dataloader;
-    DataLoader &_test_dataloader;
+    DataLoader<T_dataloader> &_train_dataloader;
+    DataLoader<T_dataloader> &_test_dataloader;
     int _epochs;
     float _learning_rate;
 };
 
-ModelTrainer::ModelTrainer(Model &model, Loss &loss, DataLoader& train_dataloader, DataLoader& test_dataloader, int epochs, float learning_rate)
+template <typename T_dataloader>
+ModelTrainer<T_dataloader>::ModelTrainer(Model &model, Loss &loss, DataLoader<T_dataloader>& train_dataloader, DataLoader<T_dataloader>& test_dataloader, int epochs, float learning_rate)
     : _model(model), _loss(loss), _train_dataloader(train_dataloader), _test_dataloader(test_dataloader) {
     this->_epochs = epochs;
     this->_learning_rate = learning_rate;

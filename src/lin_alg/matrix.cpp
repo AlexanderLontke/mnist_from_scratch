@@ -1,6 +1,7 @@
 #include "matrix.hpp"
-#include <stdlib.h>
-#include <math.h>
+
+#include <cassert>
+#include <cstdlib>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
@@ -24,12 +25,12 @@ void Matrix::set(int row, int col, matrix_t value){
     this->_data[row*this->_cols + col] = value;
 }
 
-Matrix Matrix::operator+(const Matrix& other){
+Matrix Matrix::operator+(const Matrix& other) const {
     // Dimensions must match
     assert(this->_rows == other.rows() && this->_cols == other.cols());
     
     // Define results matrix
-    Matrix result = Matrix(this->_rows, this->_cols);
+    auto result = Matrix(this->_rows, this->_cols);
 
     // Apply element-wise addition
     for(int i=0; i<this->_rows; i++){
@@ -41,7 +42,7 @@ Matrix Matrix::operator+(const Matrix& other){
     return result;
 }
 
-Matrix Matrix::operator+(const matrix_t& value){
+Matrix Matrix::operator+(const matrix_t& value) const {
     // Define results matrix
     Matrix result = Matrix(this->_rows, this->_cols);
 
@@ -55,7 +56,7 @@ Matrix Matrix::operator+(const matrix_t& value){
     return result;
 }
 
-Matrix Matrix::operator-(const Matrix& other){
+Matrix Matrix::operator-(const Matrix& other) const {
     // Dimensions must match
     assert(this->_rows == other.rows() && this->_cols == other.cols());
     
@@ -73,7 +74,7 @@ Matrix Matrix::operator-(const Matrix& other){
     return result;
 }
 
-Matrix Matrix::operator-(const matrix_t& value){    
+Matrix Matrix::operator-(const matrix_t& value) const {
     // Define results matrix
     Matrix result = Matrix(this->_rows, this->_cols);
 
@@ -88,7 +89,7 @@ Matrix Matrix::operator-(const matrix_t& value){
     return result;
 }
 
-Matrix Matrix::operator*(const Matrix& other){
+Matrix Matrix::operator*(const Matrix& other) const {
     assert (this->_cols == other.rows());
     Matrix results = Matrix(this->_rows, other.cols());
     for(int i=0; i<this->_rows; i++){
@@ -103,7 +104,7 @@ Matrix Matrix::operator*(const Matrix& other){
     return results;
 }
 
-Matrix Matrix::operator*(const matrix_t& value){
+Matrix Matrix::operator*(const matrix_t& value) const {
     Matrix result = Matrix(this->_rows, this->_cols);
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<this->_cols; j++){
@@ -113,9 +114,9 @@ Matrix Matrix::operator*(const matrix_t& value){
     return result;
 }
 
-Matrix Matrix::dot_multiply(const Matrix& other){
+Matrix Matrix::dot_multiply(const Matrix& other) const {
     assert(this->_rows == other.rows() && this->_cols == other.cols());
-    Matrix result = Matrix(this->_rows, this->_cols);
+    auto result = Matrix(this->_rows, this->_cols);
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<this->_cols; j++){
             result.set(i, j, this->get(i, j) * other.get(i, j));
@@ -125,8 +126,8 @@ Matrix Matrix::dot_multiply(const Matrix& other){
 }
 
 
-Matrix Matrix::transpose(){
-    Matrix result = Matrix(this->_cols, this->_rows);
+Matrix Matrix::transpose() const {
+    auto result = Matrix(this->_cols, this->_rows);
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<this->_cols; j++){
             result.set(j, i, this->get(i, j));
@@ -157,7 +158,7 @@ std::vector<matrix_t> Matrix::data(){
     return this->_data;
 }
 
-const std::vector<matrix_t> Matrix::data() const{
+std::vector<matrix_t> Matrix::data() const {
     return this->_data;
 }
 

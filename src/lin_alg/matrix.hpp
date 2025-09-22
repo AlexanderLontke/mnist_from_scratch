@@ -4,7 +4,6 @@
 #include <vector>
 
 typedef float matrix_t;
-
 class Matrix
 {
 public:
@@ -18,29 +17,30 @@ public:
     Matrix operator*=(const Matrix &other);
 
     // Standard operators
-    Matrix operator+(const Matrix &other);
-    Matrix operator+(const matrix_t &value);
-    Matrix operator-(const Matrix &other);
-    Matrix operator-(const matrix_t &value);
-    Matrix operator*(const Matrix &other);
-    Matrix operator*(const matrix_t &value);
-    Matrix dot_multiply(const Matrix &other);
-    Matrix transpose();
+    Matrix operator+(const Matrix &other) const;
+    Matrix operator+(const matrix_t &value) const;
+    Matrix operator-(const Matrix &other) const;
+    Matrix operator-(const matrix_t &value) const;
+    Matrix operator*(const Matrix &other) const;
+    Matrix operator*(const matrix_t &value) const;
+    Matrix dot_multiply(const Matrix &other) const;
+    Matrix transpose() const;
 
     // Getter and setter
     // element-wise
-    matrix_t get(int row, int col) const;
+    [[nodiscard]] matrix_t get(int row, int col) const;
     void set(int row, int col, matrix_t value);
     // matrix wide getter
     std::vector<matrix_t> data();
-    const std::vector<matrix_t> data() const;
+
+    std::vector<matrix_t> data() const;
     int rows() const;
     int cols() const;
 
     // convenience methods
     Matrix random(matrix_t low = 0, matrix_t high = 1);
     Matrix fill(matrix_t value);
-    matrix_t sum() const;
+    [[nodiscard]] matrix_t sum() const;
     void print() const;
 
     // private data members

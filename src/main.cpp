@@ -1,16 +1,17 @@
 #include "matrix.hpp"
 #include "trainer.hpp"
-
+#include "data_loader/mnist_dataloader.hpp"
 
 // main function
 int main() {
-    // printing hello world
-    Matrix m(2, 3, 1.0);
-    (m * 2.0).print();
+    std::string base_path = "/Users/lontkealexander/OneDrive - The Boston Consulting Group, Inc/Documents/GitHub/mnist_from_scratch/";
+    DataLoader<Matrix>* dataloader = new MNISTDataLoader(
+        base_path + "/data/train-images.idx3-ubyte",
+        base_path + "data/train-labels.idx1-ubyte");
+    std::tuple<Matrix, int> sample = dataloader->next();
+    std::cout << "Input Matrix: " << std::endl;
+    std::get<0>(sample).print();
 
-    Eye e(2, 2);
-    e.print();
-
-    // FeedForwardNeuralNetwork nn(32, 128, 10, "relu");
+    std::cout << "Label: " << std::get<1>(sample) << std::endl;
     return 0;
 }

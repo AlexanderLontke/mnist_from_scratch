@@ -9,12 +9,12 @@
 class Model
 {
 public:
-    ~Model();
+    virtual ~Model() = default;
     virtual Matrix forward(Matrix input) = 0;
     virtual void backpropagation(Matrix expected_output, Loss &loss) = 0;
     virtual void update_weights(float learning_rate) = 0;
 };
 
-Model::~Model() {};
+
 
 #endif

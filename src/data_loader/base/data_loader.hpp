@@ -1,29 +1,27 @@
 #ifndef DATALOADER_HPP
 #define DATALOADER_HPP
 
-#include <iostream>
 #include <tuple>
 #include <vector>
 
-template <typename T>
+template <typename T_class>
 class DataLoader
 {
 public:
     DataLoader();
     virtual ~DataLoader();
 
-    virtual std::tuple<std::vector<T>, std::vector<int> > next() = 0;
+    virtual std::tuple<Matrix, int> next() = 0;
 
     virtual bool empty() const = 0;
-    virtual size_t size() const = 0;
+    virtual int size() const = 0;
 };
 
-DataLoader<T>::DataLoader()
-{
-}
 
-DataLoader<T>::~DataLoader()
-{
-}
+template <typename T_constr>
+DataLoader<T_constr>::DataLoader() = default;
+
+template <typename T_de_constr>
+DataLoader<T_de_constr>::~DataLoader() {}
 
 #endif
