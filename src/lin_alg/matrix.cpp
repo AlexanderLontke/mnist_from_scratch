@@ -27,7 +27,10 @@ void Matrix::set(int row, int col, matrix_t value){
 
 Matrix Matrix::operator+(const Matrix& other) const {
     // Dimensions must match
-    assert(this->_rows == other.rows() && this->_cols == other.cols());
+    if (! (this->_rows == other.rows() && this->_cols == other.cols())) {
+        const std::string msg = "Matrix addition: Dimension mismatch: (" + std::to_string(this->_rows) + ", " + std::to_string(this->_cols) + ") + (" + std::to_string(other.rows()) + ", " + std::to_string(other.cols()) + ")\n";
+        throw std::runtime_error(msg);
+    }
     
     // Define results matrix
     auto result = Matrix(this->_rows, this->_cols);
@@ -58,8 +61,11 @@ Matrix Matrix::operator+(const matrix_t& value) const {
 
 Matrix Matrix::operator-(const Matrix& other) const {
     // Dimensions must match
-    assert(this->_rows == other.rows() && this->_cols == other.cols());
-    
+    if (! (this->_rows == other.rows() && this->_cols == other.cols())) {
+        const std::string msg = "Matrix subtraction: Dimension mismatch: (" + std::to_string(this->_rows) + ", " + std::to_string(this->_cols) + ") - (" + std::to_string(other.rows()) + ", " + std::to_string(other.cols()) + ")\n";
+        throw std::runtime_error(msg);
+    }
+
     // Define results matrix
     Matrix result = Matrix(this->_rows, this->_cols);
 
@@ -90,7 +96,10 @@ Matrix Matrix::operator-(const matrix_t& value) const {
 }
 
 Matrix Matrix::operator*(const Matrix& other) const {
-    assert (this->_cols == other.rows());
+    if (this->_cols != other.rows()){
+        const std::string msg = "Matrix multiplication: Dimension mismatch: (" + std::to_string(this->_rows) + ", " + std::to_string(this->_cols) + ") * (" + std::to_string(other.rows()) + ", " + std::to_string(other.cols()) + ")\n";
+        throw std::runtime_error(msg);
+    }
     Matrix results = Matrix(this->_rows, other.cols());
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<other.cols(); j++){
@@ -115,13 +124,17 @@ Matrix Matrix::operator*(const matrix_t& value) const {
 }
 
 Matrix Matrix::dot_multiply(const Matrix& other) const {
-    assert(this->_rows == other.rows() && this->_cols == other.cols());
+    if (! (this->_rows == other.rows() && this->_cols == other.cols())) {
+        const std::string msg = "Matrix dot multiplication: Dimension mismatch: (" + std::to_string(this->_rows) + ", " + std::to_string(this->_cols) + ") .* (" + std::to_string(other.rows()) + ", " + std::to_string(other.cols()) + ")\n";
+        throw std::runtime_error(msg);
+    }
     auto result = Matrix(this->_rows, this->_cols);
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<this->_cols; j++){
             result.set(i, j, this->get(i, j) * other.get(i, j));
         }
     }
+
     return result;
 }
 
@@ -135,8 +148,14 @@ Matrix Matrix::transpose() const {
     }
     return result;
 }
+Matrix Matrix::one_hot_encode(const int label, const int num_classes) {
+    auto return_matrix =  Matrix(1, num_classes);
+    return_matrix.fill(0);
+    return_matrix.set(0, label, 1);
+    return return_matrix;
+}
 
-Matrix Matrix::random(matrix_t low, matrix_t high){
+Matrix Matrix::random(const matrix_t low, const matrix_t high){
     for(int i=0; i<this->_rows; i++){
         for(int j=0; j<this->_cols; j++){
             this->set(i, j, low + (matrix_t)((float)arc4random()/(float)RAND_MAX)*(high-low));

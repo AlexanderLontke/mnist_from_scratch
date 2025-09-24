@@ -26,6 +26,9 @@ public:
     Matrix dot_multiply(const Matrix &other) const;
     Matrix transpose() const;
 
+    // Embedding helper
+    static Matrix one_hot_encode(const int label, const int num_classes);
+
     // Getter and setter
     // element-wise
     [[nodiscard]] matrix_t get(int row, int col) const;

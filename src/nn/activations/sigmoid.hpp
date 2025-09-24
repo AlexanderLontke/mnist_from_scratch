@@ -8,17 +8,17 @@
 class Sigmoid: public ElementwiseActivation{
     public:
         Sigmoid();
-        matrix_t activation(matrix_t value);
-        Matrix calculate_derivative(Matrix input);
+        matrix_t activation(matrix_t value) override;
+        Matrix calculate_derivative(const Matrix& input) const override;
 };
 
-Sigmoid::Sigmoid(){}
+inline Sigmoid::Sigmoid(){}
 
-matrix_t Sigmoid::activation(matrix_t value){
+inline matrix_t Sigmoid::activation(matrix_t value){
     return 1/(1 + exp(-value));
 }
 
-Matrix Sigmoid::calculate_derivative(Matrix input){
+inline Matrix Sigmoid::calculate_derivative(const Matrix &input) const {
     return input * (Matrix(input.rows(), input.cols(), 1) - input);
 }
 #endif

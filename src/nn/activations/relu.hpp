@@ -4,28 +4,27 @@
 #include "matrix.hpp"
 #include "elementwise_activation.hpp"
 
-class ReLu: public ElementwiseActivation{
-    public:
-        ReLu();
-        matrix_t activation(matrix_t value);
-        Matrix calculate_derivative(Matrix output);
+class ReLu : public ElementwiseActivation {
+public:
+    ReLu() = default;
+
+    matrix_t activation(matrix_t value) override;
+
+    [[nodiscard]] Matrix calculate_derivative(const Matrix& input) const override;
 };
 
-ReLu::ReLu(){}
-
-matrix_t ReLu::activation(matrix_t value){
-    if (value < 0){
+inline matrix_t ReLu::activation(const matrix_t value) {
+    if (value < 0) {
         return 0;
-    } else {
-        return value;
     }
+    return value;
 }
 
-Matrix ReLu::calculate_derivative(Matrix output){
-    Matrix result = Matrix(output.rows(), output.cols());
-    for(int i=0; i<output.rows(); i++){
-        for(int j=0; j<output.cols(); j++){
-            if (output.get(i, j) < 0){
+inline Matrix ReLu::calculate_derivative(const Matrix &input) const {
+    Matrix result = Matrix(input.rows(), input.cols());
+    for (int i = 0; i < input.rows(); i++) {
+        for (int j = 0; j < input.cols(); j++) {
+            if (input.get(i, j) < 0) {
                 result.set(i, j, 0);
             } else {
                 result.set(i, j, 1);

@@ -4,6 +4,8 @@
 #include <tuple>
 #include <vector>
 
+#include "matrix.hpp"
+
 template <typename T_class>
 class DataLoader
 {
@@ -15,6 +17,7 @@ public:
 
     virtual bool empty() const = 0;
     virtual int size() const = 0;
+    virtual void reset() { throw std::runtime_error("DataLoader: reset() not implemented"); }
 };
 
 

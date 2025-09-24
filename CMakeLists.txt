@@ -21,7 +21,9 @@ include_directories(./src/nn/layers/)
 include_directories(./src/nn/layers/base)
 include_directories(./src/nn/loss/)
 include_directories(./src/nn/loss/base)
-
+# Include Metrics
+include_directories(./src/metrics/)
+include_directories(./src/metrics/base)
 
 # Model implementations
 include_directories(./src/model/)
@@ -30,4 +32,15 @@ include_directories(./src/model/base)
 add_executable(RunMnistFromScratch
     ./src/main.cpp
         src/lin_alg/matrix.cpp
+        src/metrics/MulticlassAccuracy.cpp
+        src/metrics/base/Metric.cpp
+        src/nn/activations/sigmoid.hpp
+)
+
+add_executable(TestMnistFromScratch
+        ./src/test.cpp
+        src/lin_alg/matrix.cpp
+        src/metrics/MulticlassAccuracy.cpp
+        src/metrics/base/Metric.cpp
+        src/nn/activations/sigmoid.hpp
 )

@@ -6,7 +6,7 @@
 class Loss
 {
 public:
-    ~Loss();
+    virtual ~Loss();
     virtual float calculate_loss(Matrix predicted, Matrix expected) = 0;
     virtual Matrix calculate_derivative(Matrix predicted, Matrix expected) = 0;
 };

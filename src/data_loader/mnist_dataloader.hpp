@@ -4,6 +4,7 @@
 #include "base/data_loader.hpp"
 #include "matrix.hpp"
 
+#include <iostream>
 
 inline int reverseInt (const int i)
 {
@@ -22,6 +23,7 @@ public:
     std::tuple<Matrix, int> next();
     bool empty() const;
     int size() const;
+    void reset();
     const std::vector<Matrix>& get_images() const;
 
     const std::vector<int>& get_labels() const;
@@ -42,6 +44,8 @@ private:
 inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const std::string& labels_file) {
     std::ifstream images_stream(images_file, std::ios::binary);
     std::ifstream labels_stream(labels_file, std::ios::binary);
+    // TODO remove
+    int max_samples = 10;
 
     // Read images
     if (images_stream.is_open()) {
@@ -59,6 +63,7 @@ inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const st
         number_of_images = reverseInt(
             number_of_images
         );
+        number_of_images = max_samples;
         int n_rows = 0;
         images_stream.read(reinterpret_cast<char *>(&n_rows), sizeof(n_rows));
         n_rows = reverseInt(
@@ -73,14 +78,15 @@ inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const st
         std::cout << "MNISTDataLoader: Loading " << number_of_images << " images of size " << n_rows << "x" << n_columns << std::endl;
 
         for (int i = 0; i < number_of_images; ++i) {
-            auto current_image = Matrix(ROWS, COLUMNS, 1);
+            // Use flattened representation of image for FFNN input
+            auto current_image = Matrix(1, ROWS * COLUMNS, 1);
             for (int r = 0; r < n_rows; ++r) {
                 for (int c = 0; c < n_columns; ++c) {
                     unsigned char temp = 0;
                     images_stream.read(reinterpret_cast<char *>(&temp), sizeof(temp));
                     current_image.set(
-                        r,
-                        c,
+                        0,
+                        r * c,
                             temp
                         );
                 }
@@ -107,6 +113,7 @@ inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const st
         number_of_labels = reverseInt(
             number_of_labels
         );
+        number_of_labels = max_samples;
         if (number_of_labels != this->size_) {
             throw std::runtime_error("MNISTDataLoader: Number of labels does not match number of images");
         }
@@ -135,7 +142,11 @@ inline std::tuple<Matrix, int> MNISTDataLoader::next() {
     auto image = this->images[this->current_index];
     auto label = this->labels[this->current_index];
     this->current_index++;
-    return std::make_tuple(image, label);
+    return std::make_tuple(std::move(image), label);
+}
+
+inline void MNISTDataLoader::reset() {
+    this->current_index = 0;
 }
 
 

@@ -1,3 +1,4 @@
+// cpp
 #ifndef ACTIVATION_HPP
 #define ACTIVATION_HPP
 
@@ -5,15 +6,14 @@
 #include "layer.hpp"
 
 class Activation: public Layer{
-    public:
-        Matrix forward(Matrix input);
-        Matrix backward();
-        virtual Matrix calculate_derivative(Matrix input) = 0;
-        virtual Matrix _handle_forward(Matrix input) = 0;
-        bool is_activation_layer() { return true; };
+public:
+    Activation() = default;
+    Matrix backward();
+    virtual Matrix calculate_derivative(const Matrix& input) const = 0;
+    static bool is_activation_layer() { return true; };
 };
 
-Matrix Activation::backward(){
-    return this->calculate_derivative(this->get_outputs());
+inline Matrix Activation::backward(){
+    return this->calculate_derivative(this->get_input_cache());
 }
 #endif
