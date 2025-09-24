@@ -4,6 +4,7 @@
 
 #include "matrix.hpp"
 #include "layer.hpp"
+#include <stdexcept>
 
 class Linear final : public Layer
 {
@@ -16,7 +17,7 @@ public:
     Matrix bias;
 
 private:
-    Matrix _handle_forward(Matrix input) override;
+    Matrix _handle_forward(const Matrix &input) override;
 };
 
 inline Linear::Linear(const int input_size, const int output_size)
@@ -30,32 +31,55 @@ inline Linear::Linear(const int input_size, const int output_size)
 
 inline void Linear::update_weights(float learning_rate)
 {
-    // Uses cached input (_input_cache) and stored delta (Layer::_delta)
-    // Math:
-    //   outputs = X W + b
-    //   given Δ = dL/d(outputs)  (shape: batch x output_size)
-    //   weight gradient: dL/dW = X^T · Δ    (shape: input_size x output_size)
-    //   bias gradient:   dL/db = mean_rows(Δ)  (shape: 1 x output_size)
-    //
-    // Update (gradient descent):
-    //   W <- W - lr * (dL/dW) / batch
-    //   b <- b - lr * mean_rows(Δ)
     if (this->_input_cache.cols() == 0) {
         throw std::invalid_argument("Linear::update_weights: Input matrix is empty");
     };
 
-    Matrix grad_w = this->_input_cache.transpose() * this->_delta; //  Δ x X^T
+    const int batch_size = this->_input_cache.rows();
+    if (batch_size <= 0) return;
 
-    // apply averaged gradient
+    // weight gradient: X^T · Δ  (input_size x output_size)
+    Matrix grad_w = this->_input_cache.transpose() * this->_delta;
+
+    // average over batch
+    float inv_batch = 1.0f / static_cast<float>(batch_size);
+    grad_w = grad_w * inv_batch;
+
+    // update weights (gradient descent)
     this->weights += grad_w * (-learning_rate);
 
-    // bias: apply averaged delta; relies on broadcasting of Δ when adding to (1 x output_size)
-    this->bias += (this->_delta * (-learning_rate));
+    // bias gradient: mean over rows of Δ  -> shape (1 x output_size)
+    Matrix grad_b(1, this->_delta.cols());
+    for (int c = 0; c < this->_delta.cols(); ++c) {
+        float s = 0.0f;
+        for (int r = 0; r < this->_delta.rows(); ++r) {
+            s += this->_delta.get(r, c);
+        }
+        grad_b.set(0, c, s * inv_batch);
+    }
+
+    // apply bias update
+    this->bias += (grad_b * (-learning_rate));
 }
 
-inline Matrix Linear::_handle_forward(const Matrix input)
+inline Matrix Linear::_handle_forward(const Matrix &input)
 {
-    return (input * this->weights) + this->bias;
+    // compute linear output
+    Matrix out = (input * this->weights);
+
+    // if bias is a single row and out has multiple rows, broadcast bias
+    if (this->bias.rows() == 1 && out.rows() > 1) {
+        Matrix bcast(out.rows(), this->bias.cols());
+        for (int r = 0; r < bcast.rows(); ++r) {
+            for (int c = 0; c < bcast.cols(); ++c) {
+                bcast.set(r, c, this->bias.get(0, c));
+            }
+        }
+        return out + bcast;
+    }
+
+    // otherwise sizes should match (or bias already matches)
+    return out + this->bias;
 }
 
 #endif

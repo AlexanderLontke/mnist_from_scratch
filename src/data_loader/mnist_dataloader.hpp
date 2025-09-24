@@ -45,7 +45,7 @@ inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const st
     std::ifstream images_stream(images_file, std::ios::binary);
     std::ifstream labels_stream(labels_file, std::ios::binary);
     // TODO remove
-    int max_samples = 10;
+    int max_samples = 5000;
 
     // Read images
     if (images_stream.is_open()) {
@@ -87,7 +87,7 @@ inline MNISTDataLoader::MNISTDataLoader(const std::string& images_file, const st
                     current_image.set(
                         0,
                         r * c,
-                            temp
+                            temp / 255.0f
                         );
                 }
             }

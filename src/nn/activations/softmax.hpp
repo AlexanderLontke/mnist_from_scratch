@@ -9,7 +9,7 @@ class Softmax : public Activation {
 public:
     Softmax();
 
-    Matrix _handle_forward(Matrix input) override;
+    Matrix _handle_forward(const Matrix &input) override;
 
     Matrix calculate_derivative(const Matrix &input) const override;
 };
@@ -17,7 +17,7 @@ public:
 inline Softmax::Softmax() {
 }
 
-inline Matrix Softmax::_handle_forward(Matrix input) {
+inline Matrix Softmax::_handle_forward(const Matrix &input) {
     Matrix result = Matrix(input.rows(), input.cols());
     for (int i = 0; i < input.rows(); i++) {
         // subtract max per row for numerical stability

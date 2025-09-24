@@ -3,14 +3,16 @@
 
 #include "matrix.hpp"
 
-class Loss
-{
+class Loss {
 public:
     virtual ~Loss();
-    virtual float calculate_loss(Matrix predicted, Matrix expected) = 0;
-    virtual Matrix calculate_derivative(Matrix predicted, Matrix expected) = 0;
+
+    virtual float calculate_loss(const Matrix &predicted, const Matrix &expected) = 0;
+
+    virtual Matrix calculate_derivative(const Matrix &predicted, const Matrix &expected) = 0;
 };
 
-Loss::~Loss() {}
+Loss::~Loss() {
+}
 
 #endif

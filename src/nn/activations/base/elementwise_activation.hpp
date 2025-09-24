@@ -10,14 +10,14 @@ public:
     virtual matrix_t activation(matrix_t value) = 0;
 
 protected:
-    Matrix _handle_forward(Matrix input) override;
+    Matrix _handle_forward(const Matrix &input) override;
 };
 
 inline matrix_t ElementwiseActivation::activation(matrix_t value) {
     throw std::runtime_error("Elementwise activation not implemented");
 }
 
-inline Matrix ElementwiseActivation::_handle_forward(Matrix input) {
+inline Matrix ElementwiseActivation::_handle_forward(const Matrix &input) {
     Matrix result = Matrix(input.rows(), input.cols());
     for (int i = 0; i < input.rows(); i++) {
         for (int j = 0; j < input.cols(); j++) {

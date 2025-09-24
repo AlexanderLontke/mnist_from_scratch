@@ -1,3 +1,4 @@
+// cpp
 #ifndef LAYER_HPP
 #define LAYER_HPP
 
@@ -19,7 +20,7 @@ public:
     Matrix _delta;
 
 protected:
-    virtual Matrix _handle_forward(Matrix input) = 0;
+    virtual Matrix _handle_forward(const Matrix &input) = 0;
     bool in_evaluation_mode = false;
     static bool is_activation_layer() { return false; };
     // Cache input for backpropagation
@@ -41,7 +42,7 @@ inline Matrix Layer::forward(const Matrix &input) {
         this->_input_cache = input;
     }
     // outputs
-    return this->_handle_forward(input);;
+    return this->_handle_forward(input);
 }
 
 #endif

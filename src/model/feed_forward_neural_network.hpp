@@ -14,9 +14,9 @@ class FeedForwardNeuralNetwork : public Model {
 public:
     FeedForwardNeuralNetwork(int input_size, int hidden_size, int output_size, float learning_rate);
 
-    Matrix forward(Matrix input) override;
+    Matrix forward(const Matrix &input) override;
 
-    void backpropagation(Matrix expected_output, Matrix predicted_output, Loss &loss) override;
+    void backpropagation(const Matrix &expected_output, const Matrix &predicted_output, Loss &loss) override;
 
     void update_weights() override;
 
@@ -45,7 +45,7 @@ inline FeedForwardNeuralNetwork::FeedForwardNeuralNetwork(int input_size, int hi
     this->_learning_rate = learning_rate;
 }
 
-inline Matrix FeedForwardNeuralNetwork::forward(Matrix input) {
+inline Matrix FeedForwardNeuralNetwork::forward(const Matrix &input) {
     Matrix output = input;
     output = this->linear_0->forward(output);
     output = this->relu_0->forward(output);
@@ -56,11 +56,8 @@ inline Matrix FeedForwardNeuralNetwork::forward(Matrix input) {
     return output;
 }
 
-inline void FeedForwardNeuralNetwork::backpropagation(Matrix expected_output, Matrix predicted_output, Loss &loss) {
-    // Backpropagate the error
+inline void FeedForwardNeuralNetwork::backpropagation(const Matrix &expected_output, const Matrix &predicted_output, Loss &loss) {
     this->linear_2->_delta = loss.calculate_derivative(predicted_output, expected_output);
-    // Backpropagate to previous layer:
-    // delta_hidden = (W^T · delta_output) ⊙ ReLU'(z_hidden)
     this->linear_1->_delta = (
         this->linear_2->_delta * this->linear_2->weights.transpose()
     ).dot_multiply(this->relu_1->backward());
