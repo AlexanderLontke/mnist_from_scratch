@@ -11,11 +11,11 @@ The code demonstrates how to build and train a neural network from scratch witho
 | Linear Layer        | Simple feedforward neural network implementation | ✅       |
 | Activation          | ReLU and Softmax activation functions            | ✅       |
 | Loss Function       | Cross-entropy loss calculation                   | ✅       |
-| Optimizer           | Stochastic Gradient Descent (SGD) optimizer      | ✅     |
-| Backpropagation     | Backpropagation as part of model                 | ✅     |
+| Optimizer           | Stochastic Gradient Descent (SGD) optimizer      | ✅       |
+| Backpropagation     | Backpropagation as part of model                 | ✅       |
 | Evaluation          | Evaluate model accuracy on test set              | ✅       |
 | Visualization       | Visualize training progress and results          | WIP     |
 | Trainer             | Training loop management                         | ✅       |
-| Batched Training    | Support for mini-batch training                  | Planned |
+| Batched Training    | Support for mini-batch training                  | ✅       |
 | Graph Based Linking | Modular layer connections                        | Planned |
-| DB Logging         | Log training metrics to a database               | Planned |
+| DB Logging          | Log training metrics to a database               | Planned |
